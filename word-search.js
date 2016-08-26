@@ -1,10 +1,19 @@
 const { createReadStream } = require('fs');
 const limitLength = require('./limit-ten');
+const es = require('event-stream');
 
-console.log("hey");
+const [,, searchedWord, ..._] = process.argv;
 
 createReadStream('/usr/share/dict/words')
-  // .pipe(limitLength)
+  .pipe(es.split())
+  .pipe(es.map(function (data, cb) { 
+    if (data.startsWith(`${searchedWord}`)) {
+      cb(null, `${data} `)
+    } else {
+      cb()
+    }
+  }))
+  .pipe(limitLength)
   .pipe(process.stdout);
 
 // const 
