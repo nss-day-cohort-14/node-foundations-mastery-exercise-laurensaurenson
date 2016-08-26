@@ -5,11 +5,13 @@ const es = require('event-stream');
 const [,, searchedWord, ..._] = process.argv;
 
 if (!searchedWord) {
+  // displayed if no searchterm given
   console.log(`Usage: word-search.js [searchterm]`);
 } else {
-  console.log(`Usage: word-search.js ${searchedWord}`);
   createReadStream('/usr/share/dict/words')
+    // splits words into array
     .pipe(es.split())
+    // checks if word begins with search term
     .pipe(es.map(function (data, cb) { 
       if (data.startsWith(`${searchedWord}`)) {
         cb(null, `${data} `)
@@ -17,6 +19,8 @@ if (!searchedWord) {
         cb()
       }
     }))
+    // limit to ten words shown
     .pipe(limitLength)
+    // prints
     .pipe(process.stdout);
 }
