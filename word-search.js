@@ -9,12 +9,12 @@ if (!searchedWord) {
   console.log(`Usage: word-search.js [searchterm]`);
 } else {
   createReadStream('/usr/share/dict/words')
-    // splits words into array
+    // splits string object on \n into an array of substrings
     .pipe(es.split())
     // checks if word begins with search term
     .pipe(es.map(function (data, cb) { 
       if (data.startsWith(`${searchedWord}`)) {
-        cb(null, `${data} `)
+        cb(null, `${data}`)
       } else {
         cb()
       }
